@@ -1,7 +1,18 @@
 import React from "react";
+import StudentsTable from "./StudentsTable";
+import Registration from "./Registration";
+import { Typography } from "antd";
+
+const { Title } = Typography;
 
 const Courses = () => {
-  return <h1>Courses Page</h1>;
+  return (
+    <>
+      <Title level={2}>Courses</Title>
+      <Registration />
+      <StudentsTable />;
+    </>
+  );
 };
 
 export default Courses;

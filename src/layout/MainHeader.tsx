@@ -11,7 +11,7 @@ const items = [
 ];
 
 function MainHeader() {
-  const navigate = useNavigate(); // 👈 Hook for navigation
+  const navigate = useNavigate();
 
   return (
     <Header style={{ display: "flex", alignItems: "center" }}>

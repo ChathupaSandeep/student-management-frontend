@@ -1,6 +1,6 @@
 import React from "react";
 import { Layout, theme } from "antd";
-import { Outlet } from "react-router-dom"; // Import Outlet for route rendering
+import { Outlet } from "react-router-dom";
 
 const { Content } = Layout;
 
@@ -21,7 +21,7 @@ const MainLayout: React.FC = () => {
             margin: 24,
           }}
         >
-          <Outlet /> {/* 👈 This is where the routed page components render */}
+          <Outlet />
         </div>
       </Content>
     </Layout>
