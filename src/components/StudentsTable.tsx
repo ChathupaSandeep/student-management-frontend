@@ -1,90 +1,84 @@
 import React from "react";
-import { Space, Table, Tag } from "antd";
+import { Space, Table, Tag, message } from "antd";
 import type { TableProps } from "antd";
+import { deleteStudent } from "../api/studentService";
 
 interface DataType {
   key: string;
+  id: number;
   name: string;
-  age: number;
-  address: string;
-  courses: string[];
+  dob: Date;
+  email: string;
+  courses: number[];
 }
 
-const columns: TableProps<DataType>["columns"] = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: "Age",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-  },
-  {
-    title: "Courses",
-    key: "courses",
-    dataIndex: "courses",
-    render: (_, { courses }) => (
-      <>
-        {courses.map((tag) => {
-          let color = tag.length > 5 ? "geekblue" : "green";
-          if (tag === "loser") {
-            color = "volcano";
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
+interface StudentsTableProps {
+  students: DataType[];
+  fetchStudents: () => void;
+}
+
+const StudentsTable: React.FC<StudentsTableProps> = ({
+  students,
+  fetchStudents,
+}) => {
+  const handleDelete = async (studentId: number) => {
+    try {
+      await deleteStudent(studentId);
+      message.success("Student deleted successfully.");
+      fetchStudents(); // Refresh student list
+    } catch (error) {
+      message.error("Failed to delete student.");
+    }
+  };
+
+  const columns: TableProps<DataType>["columns"] = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "Date of Birth",
+      dataIndex: "dob",
+      key: "dob",
+    },
+    {
+      title: "E-mail",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Courses",
+      key: "courses",
+      dataIndex: "courses",
+      render: (_, { courses }) => (
+        <>
+          {courses.map((tag) => (
+            <Tag color="blue" key={tag}>
+              {tag}
             </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: (_) => (
-      <Space size="middle">
-        <a>Edit</a>
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
+          ))}
+        </>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <a>Edit</a>
+          <a onClick={() => handleDelete(record.id)} style={{ color: "red" }}>
+            Delete
+          </a>
+        </Space>
+      ),
+    },
+  ];
 
-const data: DataType[] = [
-  {
-    key: "1",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    courses: ["Information Technology", "Science"],
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    courses: ["Maths"],
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    courses: ["Music", "Commerce"],
-  },
-];
-
-const StudentsTable: React.FC = () => (
-  <Table<DataType> columns={columns} dataSource={data} />
-);
+  return (
+    <Table<DataType> columns={columns} dataSource={students} rowKey="id" />
+  );
+};
 
 export default StudentsTable;
