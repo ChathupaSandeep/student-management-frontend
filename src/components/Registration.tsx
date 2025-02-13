@@ -1,5 +1,10 @@
 import React from "react";
-import { Button, Form, Input, Select } from "antd";
+import { Button, DatePicker, Form, Input, message } from "antd";
+import { createStudent } from "../api/studentService";
+
+interface RegistrationProps {
+  fetchStudents: () => void;
+}
 
 const formItemLayout = {
   labelCol: {
@@ -7,39 +12,36 @@ const formItemLayout = {
     sm: { span: 8 },
   },
   wrapperCol: {
-    xs: { span: 24 },
+    xs: { span: 12 },
     sm: { span: 16 },
   },
 };
 
-const tailFormItemLayout = {
-  wrapperCol: {
-    xs: {
-      span: 24,
-      offset: 0,
-    },
-    sm: {
-      span: 16,
-      offset: 8,
-    },
-  },
-};
-
-const Registration: React.FC = () => {
+const Registration: React.FC<RegistrationProps> = ({ fetchStudents }) => {
   const [form] = Form.useForm();
 
-  const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
+  const onFinish = async (values: any) => {
+    const updatedValues = {
+      ...values,
+      dob: values["dob"].format("YYYY-MM-DD"),
+    };
+    try {
+      await createStudent(updatedValues);
+      message.success("Student registered successfully!");
+      form.resetFields();
+      fetchStudents();
+    } catch (error) {
+      message.error("Failed to register student. Please try again.");
+    }
   };
 
   return (
     <Form
-      {...formItemLayout}
       form={form}
+      {...formItemLayout}
       name="register"
       onFinish={onFinish}
       style={{ maxWidth: 600 }}
-      scrollToFirstError
     >
       <Form.Item
         name="name"
@@ -49,21 +51,29 @@ const Registration: React.FC = () => {
         <Input />
       </Form.Item>
       <Form.Item
-        name="age"
-        label="Age"
-        rules={[{ required: true, message: "Please input your age!" }]}
+        name="dob"
+        label="Date of Birth"
+        rules={[
+          {
+            type: "object",
+            required: true,
+            message: "Please input your Date of Birth!",
+          },
+        ]}
       >
-        <Input type="number" />
+        <DatePicker />
       </Form.Item>
       <Form.Item
-        name="address"
-        label="Address"
-        rules={[{ required: true, message: "Please input your address!" }]}
+        name="email"
+        label="E-mail"
+        rules={[
+          { required: true, message: "Please input your E-mail address!" },
+          { type: "email", message: "Please input a valid email" },
+        ]}
       >
         <Input />
       </Form.Item>
-
-      <Form.Item {...tailFormItemLayout}>
+      <Form.Item>
         <Button type="primary" htmlType="submit">
           Register
         </Button>
