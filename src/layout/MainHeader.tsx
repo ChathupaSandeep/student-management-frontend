@@ -8,6 +8,8 @@ const items = [
   { key: "1", label: "Home", path: "/" },
   { key: "2", label: "Students", path: "/students" },
   { key: "3", label: "Courses", path: "/courses" },
+  { key: "4", label: "Lecturers", path: "/lecturers" },
+  { key: "5", label: "Guardians", path: "/guardians" },
 ];
 
 function MainHeader() {
