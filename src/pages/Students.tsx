@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import StudentsTable from "./StudentsTable";
-import Registration from "./Registration";
+import StudentsTable from "../components/StudentsTable";
+import Registration from "../components/Registration";
 import { getStudents } from "../api/studentService";
 import { Typography } from "antd";
 

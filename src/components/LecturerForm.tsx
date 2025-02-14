@@ -1,9 +1,9 @@
 import React from "react";
-import { Button, DatePicker, Form, Input, message } from "antd";
-import { createStudent } from "../api/studentService";
+import { Button, Form, Input, InputNumber, message, Select } from "antd";
+import { createLecturer } from "../api/lecturerService";
 
-interface RegistrationProps {
-  fetchStudents: () => void;
+interface LecturerFormProps {
+  fetchLecturers: () => void;
 }
 
 const formItemLayout = {
@@ -17,21 +17,17 @@ const formItemLayout = {
   },
 };
 
-const Registration: React.FC<RegistrationProps> = ({ fetchStudents }) => {
+const LecturerForm: React.FC<LecturerFormProps> = ({ fetchLecturers }) => {
   const [form] = Form.useForm();
 
   const onFinish = async (values: any) => {
-    const updatedValues = {
-      ...values,
-      dob: values["dob"].format("YYYY-MM-DD"),
-    };
     try {
-      await createStudent(updatedValues);
-      message.success("Student registered successfully!");
+      await createLecturer(values);
+      message.success("Lecturer added successfully!");
       form.resetFields();
-      fetchStudents();
+      fetchLecturers();
     } catch (error) {
-      message.error("Failed to register student. Please try again.");
+      message.error("Failed to add lecturer. Please try again.");
     }
   };
 
@@ -50,19 +46,7 @@ const Registration: React.FC<RegistrationProps> = ({ fetchStudents }) => {
       >
         <Input />
       </Form.Item>
-      <Form.Item
-        name="dob"
-        label="Date of Birth"
-        rules={[
-          {
-            type: "object",
-            required: true,
-            message: "Please input your Date of Birth!",
-          },
-        ]}
-      >
-        <DatePicker />
-      </Form.Item>
+
       <Form.Item
         name="email"
         label="E-mail"
@@ -73,7 +57,17 @@ const Registration: React.FC<RegistrationProps> = ({ fetchStudents }) => {
       >
         <Input />
       </Form.Item>
-
+      <Form.Item
+        name="gender"
+        label="Gender"
+        rules={[{ required: true, message: "Please input your Gender!" }]}
+      >
+        <Select>
+          <Select.Option value="MALE">Male</Select.Option>
+          <Select.Option value="FEMALE">Female</Select.Option>
+          <Select.Option value="OTHER">Other</Select.Option>
+        </Select>
+      </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit">
           Register
@@ -83,4 +77,4 @@ const Registration: React.FC<RegistrationProps> = ({ fetchStudents }) => {
   );
 };
 
-export default Registration;
+export default LecturerForm;
